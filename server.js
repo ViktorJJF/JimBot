@@ -6,6 +6,12 @@ const mongoose = require("mongoose");
 
 const port = process.env.PORT || 3000;
 
+// for parsing json
+app.use(
+  bodyParser.json({
+    limit: "20mb",
+  })
+);
 // parse application/x-www-form-urlencoded
 app.use(
   bodyParser.urlencoded({
