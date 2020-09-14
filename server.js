@@ -36,14 +36,18 @@ app.get("/", (req, res) => {
   return res.send("Todo OK iama");
 });
 
-// app.get("/github", (req, res) => {
-//   return res.sendFile(__dirname + "/pull.php");
-// });
+app.get("/github", (req, res) => {
+  return res.sendFile(__dirname + "/pull.php");
+});
 
 //api
 // app.use("/api", require("./routes/api"));
 
-// app.listen(port, () => {
-//   console.log(`Escuchando peticiones en el puerto ${port}`);
-// });
-app.listen();
+if (process.env.SERVER === "namecheap") {
+  console.log("estamos en namecheap...");
+  app.listen();
+} else {
+  app.listen(port, () => {
+    console.log(`Escuchando peticiones en el puerto ${port}`);
+  });
+}
