@@ -14,19 +14,19 @@ app.use(
   })
 );
 
-mongoose.connect(
-  config.DBSTRING,
-  {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  },
-  (err, res) => {
-    if (err) throw err;
-    console.log("DB online ONLINE");
-  }
-);
+// mongoose.connect(
+//   config.DBSTRING,
+//   {
+//     useUnifiedTopology: true,
+//     useNewUrlParser: true,
+//     useCreateIndex: true,
+//     useFindAndModify: false,
+//   },
+//   (err, res) => {
+//     if (err) throw err;
+//     console.log("DB online ONLINE");
+//   }
+// );
 
 //chatbots routes
 // app.use("/messenger", require("./Facebook/facebookBot"));
@@ -40,15 +40,10 @@ app.get("/", (req, res) => {
 //   return res.sendFile(__dirname + "/pull.php");
 // });
 
-let intervalo = 0;
-setInterval(() => {
-  intervalo++;
-  console.log("Intervalo: ", intervalo);
-}, 1 * 60 * 1000);
 //api
 // app.use("/api", require("./routes/api"));
 
-// app.listen(port, () => {
-//   console.log(`Escuchando peticiones en el puerto ${port}`);
-// });
-app.listen();
+app.listen(port, () => {
+  console.log(`Escuchando peticiones en el puerto ${port}`);
+});
+// app.listen();

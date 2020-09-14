@@ -3,12 +3,15 @@ const config = require("../config");
 const TelegramBot = require("node-telegram-bot-api");
 const dialogflow = require("../dialogflow");
 const { structProtoToJson } = require("../helpers/structFunctions");
+const schedule = require("node-schedule");
+var fs = require("fs");
 //delete this
 const users = []; //convert to database
 // replace the value below with the Telegram token you receive from @BotFather
 const token = config.TELEGRAMTOKEN;
 
 // Create a bot that uses 'polling' to fetch new updates
+
 const bot = new TelegramBot(token, {
   polling: true,
 });
@@ -37,6 +40,17 @@ bot.on("message", async (msg) => {
   await sendToDialogFlow(sender, message);
   // send a message to the chat acknowledging receipt of their message
 });
+notifySleep();
+
+function notifySleep() {
+  var rule = new schedule.RecurrenceRule();
+  rule.dayOfWeek = [0, new schedule.Range(0, 6)];
+  rule.hour = 20;
+  rule.minute = 48;
+  var j = schedule.scheduleJob(rule, () => {
+    sendTextMessage(624818317, "que fue loco");
+  });
+}
 
 function saveUserInformation(msg) {
   let userId = msg.from.id;
@@ -81,6 +95,37 @@ async function handleDialogFlowResponse(sender, response) {
   }
 }
 
+async function readData() {
+  return new Promise((resolve, reject) => {
+    fs.readFile("viktorData.json", "utf8", function readFileCallback(
+      err,
+      data
+    ) {
+      if (err) {
+        console.log(err);
+        reject(err);
+      } else {
+        resolve(JSON.parse(data)); //now it an object
+      }
+    });
+  });
+}
+
+async function updateData(newData) {
+  fs.readFile("viktorData.json", "utf8", function readFileCallback(err, data) {
+    if (err) {
+      console.log(err);
+    } else {
+      fs.writeFile(
+        "viktorData.json",
+        JSON.stringify(newData),
+        "utf8",
+        () => {}
+      );
+    }
+  });
+}
+
 async function handleDialogFlowAction(
   sender,
   action,
@@ -89,8 +134,38 @@ async function handleDialogFlowAction(
   parameters
 ) {
   switch (action) {
-    case "ActionQueja.action":
-      handleMessages(messages, sender);
+    case "Sleep.bedTime.yes.action":
+      try {
+        handleMessages(messages, sender);
+        let userInfo = await readData();
+        userInfo.bedTime.push({ state: true, date: Date.now() });
+        updateData(userInfo);
+      } catch (error) {
+        console.log(error);
+      }
+      break;
+    case "Sleep.bedTime.no.reason.action":
+      try {
+        let reason = parameters.fields.reason.stringValue;
+        handleMessages(messages, sender);
+        let userInfo = await readData();
+        userInfo.bedTime.push({ state: false, reason, date: Date.now() });
+        updateData(userInfo);
+      } catch (error) {
+        console.log(error);
+      }
+
+      break;
+    case "Sleep.wakeUp.despierto.action":
+      try {
+        handleMessages(messages, sender);
+        let userInfo = await readData();
+        userInfo.wakeUpTime.push({ state: true, date: Date.now() });
+        updateData(userInfo);
+      } catch (error) {
+        console.log(error);
+      }
+
       break;
     default:
       console.log(
