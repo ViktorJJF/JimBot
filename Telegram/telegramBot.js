@@ -48,8 +48,8 @@ sendTextMessage(624818317, "Me active a las: " + formatISO9075(new Date()));
 function notifySleep() {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 23;
-  rule.minute = 25;
+  rule.hour = 0;
+  rule.minute = 59;
   schedule.scheduleJob(rule, () => {
     sendToDialogFlow(624818317, "Sleep.bedTime");
   });
