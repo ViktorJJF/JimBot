@@ -43,7 +43,7 @@ app.get("/", (req, res) => {
 //api
 // app.use("/api", require("./routes/api"));
 
-app.listen(port, () => {
-  console.log(`Escuchando peticiones en el puerto ${port}`);
-});
-// app.listen();
+// app.listen(port, () => {
+//   console.log(`Escuchando peticiones en el puerto ${port}`);
+// });
+app.listen();
