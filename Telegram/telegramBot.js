@@ -47,7 +47,7 @@ function notifySleep() {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
   rule.hour = 23;
-  rule.minute = 22;
+  rule.minute = 24;
   schedule.scheduleJob(rule, () => {
     sendToDialogFlow(624818317, "Sleep.bedTime");
   });
