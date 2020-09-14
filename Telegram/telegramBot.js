@@ -1,4 +1,5 @@
 process.env.NTBA_FIX_319 = 1;
+const formatISO9075 = require("date-fns/formatISO9075");
 const config = require("../config");
 const TelegramBot = require("node-telegram-bot-api");
 const dialogflow = require("../dialogflow");
@@ -43,11 +44,12 @@ bot.on("message", async (msg) => {
 
 notifySleep();
 
+sendTextMessage(624818317, "Me active a las: " + formatISO9075(new Date()));
 function notifySleep() {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
   rule.hour = 23;
-  rule.minute = 24;
+  rule.minute = 25;
   schedule.scheduleJob(rule, () => {
     sendToDialogFlow(624818317, "Sleep.bedTime");
   });
@@ -350,7 +352,7 @@ async function sendGenericMessage(senderID, element) {
   );
 }
 
-let sendTextMessage = (senderID, message) => {
+function sendTextMessage(senderID, message) {
   if (message.includes("{first_name}") || message.includes("{{last_name}}")) {
     let userData = getUserData(senderID);
     message = message
@@ -360,7 +362,7 @@ let sendTextMessage = (senderID, message) => {
   bot.sendMessage(senderID, message, {
     parse_mode: "HTML",
   });
-};
+}
 
 function isDefined(obj) {
   if (obj === undefined) {
