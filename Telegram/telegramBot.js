@@ -40,15 +40,16 @@ bot.on("message", async (msg) => {
   await sendToDialogFlow(sender, message);
   // send a message to the chat acknowledging receipt of their message
 });
+
 notifySleep();
 
 function notifySleep() {
   var rule = new schedule.RecurrenceRule();
   rule.dayOfWeek = [0, new schedule.Range(0, 6)];
-  rule.hour = 20;
-  rule.minute = 48;
-  var j = schedule.scheduleJob(rule, () => {
-    sendTextMessage(624818317, "que fue loco");
+  rule.hour = 23;
+  rule.minute = 00;
+  schedule.scheduleJob(rule, () => {
+    sendToDialogFlow(624818317, "Sleep.bedTime");
   });
 }
 
